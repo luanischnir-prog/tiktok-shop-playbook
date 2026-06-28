@@ -708,6 +708,10 @@ export function getAllEntries(): Entry[] {
   return entries;
 }
 
+export function getEntryById(id: string): Entry | undefined {
+  return entries.find((e) => e.id === id);
+}
+
 export function getCountsByTopic(): Record<string, number> {
   return entries.reduce(
     (acc, e) => ({ ...acc, [e.topic]: (acc[e.topic] ?? 0) + 1 }),

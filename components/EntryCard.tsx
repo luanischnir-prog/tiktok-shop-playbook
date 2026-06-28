@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Entry } from "@/data/entries";
 
 const TYPE_LABELS: Record<string, string> = {
@@ -22,6 +23,12 @@ function formatDate(d: string) {
   }).format(new Date(d));
 }
 
+function getSummary(body: string, maxLen = 120): string {
+  const firstLine = body.split("\n")[0].trim();
+  if (firstLine.length <= maxLen) return firstLine;
+  return firstLine.slice(0, maxLen).trimEnd() + "…";
+}
+
 export function EntryCard({ entry, color }: { entry: Entry; color: string }) {
   return (
     <div
@@ -36,9 +43,18 @@ export function EntryCard({ entry, color }: { entry: Entry; color: string }) {
 
       <h3 className="font-semibold text-white text-base leading-snug">{entry.title}</h3>
 
-      <p className="text-sm text-zinc-400 whitespace-pre-wrap leading-relaxed">{entry.body}</p>
+      <p className="text-sm text-zinc-400 leading-relaxed">{getSummary(entry.body)}</p>
 
-      <p className="text-xs text-zinc-600 mt-auto pt-1">{formatDate(entry.createdAt)}</p>
+      <div className="flex items-center justify-between mt-auto pt-1">
+        <p className="text-xs text-zinc-600">{formatDate(entry.createdAt)}</p>
+        <Link
+          href={`/${entry.topic}/${entry.id}`}
+          className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+          style={{ backgroundColor: color + "33", color }}
+        >
+          Ver más →
+        </Link>
+      </div>
     </div>
   );
 }
